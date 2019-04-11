@@ -1,6 +1,6 @@
 # fastPrinter
 
-快速打印选中的内容。
+A VS Code plugin to help insert print statements in different languages.
 
 ## Usage
 
@@ -8,9 +8,13 @@
 
 ![](https://upload-images.jianshu.io/upload_images/2674994-245ef3be8e6d62aa.gif?imageMogr2/auto-orient/strip)
 
-## Support
+## Support languages
 
-js, ts, ruby, python, java
+- Javascript
+- TypeScript
+- Ruby
+- Python
+- Java
 
 ## TODO
 
