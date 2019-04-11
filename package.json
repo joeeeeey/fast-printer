@@ -1,6 +1,7 @@
 {
   "name": "fastprinter",
   "description": "Help insert print statements in different languages.",
+  "repository": "https://github.com/joeeeeey/fast-printer",
   "publisher": "Joey",
   "icon": "logo.png",
   "displayName": "fastPrinter",
