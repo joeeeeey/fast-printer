@@ -90,6 +90,12 @@ const logExist = (editor: any, fileSuffix: string, document: any, documentText: 
     case 'java': // java
       logRegex = /System.out.print\((.*)\);?/g;
       break;
+    case 'go': // go
+      logRegex = /fmt.(Println)\((.*)\);?/g;
+      break;
+    case 'sh': // shell
+      logRegex = /echo(.*);?/g;
+      break;
     default:
       logRegex = /console.(log)\((.*)\);?/g;
       break;
@@ -162,6 +168,9 @@ export function activate(context: vscode.ExtensionContext) {
           break;
         case 'java': // java
           logToInsert = text ? `System.out.print('${text}: ', ${text});` : 'System.out.print(\'default\');';
+          break;
+        case 'go': // go
+          logToInsert = text ? `fmt.Println("${text}: ", ${text})` : 'fmt.Println("")';
           break;
         case 'sh': // shell
           logToInsert = text ? `echo "${text} is: \${${text}}"` : 'echo ""';
