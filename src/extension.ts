@@ -28,49 +28,50 @@ const getFilePathSuffix = (editor: any) => {
   return suffix;
 };
 
-const getAllLogStatements = (fileSuffix: string, document: any, documentText: any) => {
-  let logStatements = [];
+// discard
+// const getAllLogStatements = (fileSuffix: string, document: any, documentText: any) => {
+//   let logStatements = [];
 
-  let logRegex: any;
-  switch (fileSuffix) {
-    case 'js':
-    case 'jsx':
-    case 'ts':
-      logRegex = /console.(log)\((.*)\);?/g;
-      break;
-    case 'py': // python
-    case 'rb': // ruby
-      logRegex = /print\((.*)\);?/g;
-      break;
-    case 'java': // java
-      logRegex = /System.out.print\((.*)\);?/g;
-      break;
-    default:
-      logRegex = /console.(log)\((.*)\);?/g;
-      break;
-  }
+//   let logRegex: any;
+//   switch (fileSuffix) {
+//     case 'js':
+//     case 'jsx':
+//     case 'ts':
+//       logRegex = /console.(log)\((.*)\);?/g;
+//       break;
+//     case 'py': // python
+//     case 'rb': // ruby
+//       logRegex = /print\((.*)\);?/g;
+//       break;
+//     case 'java': // java
+//       logRegex = /System.out.print\((.*)\);?/g;
+//       break;
+//     default:
+//       logRegex = /console.(log)\((.*)\);?/g;
+//       break;
+//   }
 
-  let match;
-  while (match = logRegex.exec(documentText)) {
-    let matchRange =
-      new vscode.Range(
-        document.positionAt(match.index),
-        document.positionAt(match.index + match[0].length)
-      );
+//   let match;
+//   while (match = logRegex.exec(documentText)) {
+//     let matchRange =
+//       new vscode.Range(
+//         document.positionAt(match.index),
+//         document.positionAt(match.index + match[0].length)
+//       );
 
-    let emptyLineRange =
-      new vscode.Range(
-        document.positionAt(match.index + match[0].length),
-        document.positionAt(match.index + match[0].length + 1)
-      );
+//     let emptyLineRange =
+//       new vscode.Range(
+//         document.positionAt(match.index + match[0].length),
+//         document.positionAt(match.index + match[0].length + 1)
+//       );
 
-    if (!matchRange.isEmpty)
-      logStatements.push(matchRange);
-    logStatements.push(emptyLineRange);
-  }
+//     if (!matchRange.isEmpty)
+//       logStatements.push(matchRange);
+//     logStatements.push(emptyLineRange);
+//   }
 
-  return logStatements;
-}
+//   return logStatements;
+// }
 
 
 const logExist = (editor: any, fileSuffix: string, document: any, documentText: any) => {
@@ -198,6 +199,7 @@ export function activate(context: vscode.ExtensionContext) {
     const documentText = editor.document.getText();
     const suffix = getFilePathSuffix(editor);
 
+    // logExist will put cursor after each print statement.
     if (logExist(editor, suffix, document, documentText)) {
       vscode.commands.executeCommand('editor.action.deleteLines')
         .then(() => {

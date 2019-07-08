@@ -27,6 +27,7 @@ It will insert a print statement like:
 - Python
 - Java
 - bash
+- go
 
 ## TODO
 
