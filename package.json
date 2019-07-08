@@ -2,7 +2,7 @@
   "name": "fastprinter",
   "description": "Help insert print statements in different languages.",
   "repository": "https://github.com/joeeeeey/fast-printer",
-  "publisher": "Joey",
+  "publisher": "joeeeeey",
   "icon": "logo.png",
   "displayName": "fastPrinter",
   "version": "0.0.1",
@@ -13,8 +13,8 @@
     "Other"
   ],
   "activationEvents": [
-		"onCommand:extension.insertPrintStatement",
-		"onCommand:extension.deletePrintStatement"
+    "onCommand:extension.insertPrintStatement",
+    "onCommand:extension.deletePrintStatement"
   ],
   "main": "./out/extension.js",
   "contributes": {
@@ -56,5 +56,6 @@
     "tslint": "^5.12.1",
     "@types/node": "^10.12.21",
     "@types/mocha": "^2.2.42"
-  }
+  },
+  "license": "MIT"
 }
