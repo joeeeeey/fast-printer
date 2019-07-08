@@ -13,7 +13,8 @@
     "Other"
   ],
   "activationEvents": [
-		"onCommand:extension.insertPrintStatement"
+		"onCommand:extension.insertPrintStatement",
+		"onCommand:extension.deletePrintStatement"
   ],
   "main": "./out/extension.js",
   "contributes": {
@@ -21,6 +22,10 @@
       {
         "command": "extension.insertPrintStatement",
         "title": "insertPrintStatement"
+      },
+      {
+        "command": "extension.deletePrintStatement",
+        "title": "deletePrintStatement"
       }
     ],
     "keybindings": [
@@ -28,6 +33,12 @@
         "command": "extension.insertPrintStatement",
         "key": "ctrl+;",
         "mac": "cmd+shift+;",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "extension.deletePrintStatement",
+        "key": "ctrl+'",
+        "mac": "cmd+shift+'",
         "when": "editorTextFocus"
       }
     ]

@@ -163,6 +163,9 @@ export function activate(context: vscode.ExtensionContext) {
         case 'java': // java
           logToInsert = text ? `System.out.print('${text}: ', ${text});` : 'System.out.print(\'default\');';
           break;
+        case 'sh': // shell
+          logToInsert = text ? `echo "${text} is: \${${text}}"` : 'echo ""';
+          break;
         default:
           logToInsert = text ? `console.log('${text}: ', ${text});` : 'console.log();';
           break;
@@ -185,7 +188,6 @@ export function activate(context: vscode.ExtensionContext) {
     const document = editor.document;
     const documentText = editor.document.getText();
     const suffix = getFilePathSuffix(editor);
-    let workspaceEdit = new vscode.WorkspaceEdit();
 
     if (logExist(editor, suffix, document, documentText)) {
       vscode.commands.executeCommand('editor.action.deleteLines')
