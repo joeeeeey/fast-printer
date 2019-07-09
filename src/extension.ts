@@ -84,28 +84,27 @@ const logExist = (editor: any, fileSuffix: string, document: any, documentText: 
 
 const getFarthestLetterPosition = (direction: string, cursorSelection: any, editor: any) => {
   let currentCharacterPosition = cursorSelection.character;
-  while(true) {
+  while (true) {
     // Assume all the words in VScode always at one line.
     if (currentCharacterPosition > 0 || direction === 'right') {
-     const offsetTextRange = new vscode.Range(
+      const offsetTextRange = new vscode.Range(
         new vscode.Position(
           cursorSelection.line,
-          currentCharacterPosition - 1 
+          direction === 'right' ? currentCharacterPosition : currentCharacterPosition - 1
         ),
         new vscode.Position(
           cursorSelection.line,
-          currentCharacterPosition
+          direction === 'right' ? currentCharacterPosition + 1 : currentCharacterPosition
         ),
       );
-
       const offsetText = editor.document.getText(offsetTextRange);
 
       // Is not an assumed variable? Should it be configed?
       if (!offsetText.match(/^[a-zA-Z0-9_]+$/)) {
-        return direction === 'left' ? currentCharacterPosition : currentCharacterPosition -1;
+        return currentCharacterPosition;
       }
 
-      direction === 'left' ? currentCharacterPosition -= 1 : currentCharacterPosition += 1; 
+      direction === 'left' ? currentCharacterPosition -= 1 : currentCharacterPosition += 1;
     } else {
       return currentCharacterPosition;
     }
@@ -136,7 +135,7 @@ const getAutoSelectedText = (editor: any) => {
       );
 
       const autoSelectedText = editor.document.getText(autoSelectedTextRange);
-      if ( autoSelectedText ){
+      if (autoSelectedText) {
         return autoSelectedText;
       }
       return null;

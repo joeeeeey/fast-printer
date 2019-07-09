@@ -3,16 +3,27 @@
 A VS Code plugin to help insert print statements in different languages.
 
 ## Usage
+![demo](https://raw.githubusercontent.com/joeeeeey/fast-printer/master/resources/demo.gif)
 
 ### Insert print statement
 
-Click or select content(usually a variable name) and press `shift+command+;` at the same time.
+Click or select the text(usually a variable name) and press `shift+command+;` at the same time.
 
 It will insert a print statement like:
-- `console.log("${variable}: ", variable)`
-- `print("#{variable}: ", variable)`
+```javascript
+// .js | .ts | .jsx
+console.log("variable: ", variable)
+```
 
-![demo](https://raw.githubusercontent.com/joeeeeey/fast-printer/master/resources/demo.gif)
+```python
+# .py | .rb
+print("variable: ", variable)
+```
+
+```go
+// .go
+fmt.Println("variable: ", variable)
+```
 
 ### Remove all print statements
 
@@ -20,20 +31,23 @@ It will insert a print statement like:
 
 ## Support languages
 
-- Javascript
-- TypeScript
-- Ruby
-- Python
-- Java
-- Go
-- Bash
+- Javascript(`.js|.jsx`)
+- TypeScript(`.ts`)
+- Ruby(`.rb`)
+- Python(`.py`)
+- Java(`.java`)
+- Go(`.go`)
+- Bash(`.sh`)
 
-## Q&A
+Note: Fast printer discover language by *file suffix*.
 
-- The hotkey not work.
+## Issues
 
-Make sure `insertPrintStatement` has been placed at `Preference => Keybords Shortcut` and has no other conflict.
+- The hotkey not work
+  - Make sure `insertPrintStatement` has been placed at `Preference => Keybords Shortcut` and has no other conflict.
+
+
 
 ## TODO
-
-More languages support.
+- More languages support.
+- Customized config for auto select word.
