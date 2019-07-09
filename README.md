@@ -6,8 +6,7 @@ A VS Code plugin to help insert print statements in different languages.
 
 ### Insert print statement
 
-Select content(usually a variable name) and press `shift+command+;` at the same time.
-(Make surce `insertPrintStatement` has been placed at preference => keybords shortcut )
+Click or select content(usually a variable name) and press `shift+command+;` at the same time.
 
 It will insert a print statement like:
 - `console.log("${variable}: ", variable)`
@@ -26,8 +25,14 @@ It will insert a print statement like:
 - Ruby
 - Python
 - Java
-- bash
-- go
+- Go
+- Bash
+
+## Q&A
+
+- The hotkey not work.
+
+Make sure `insertPrintStatement` has been placed at `Preference => Keybords Shortcut` and has no other conflict.
 
 ## TODO
 

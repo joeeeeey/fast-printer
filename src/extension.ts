@@ -14,7 +14,6 @@ const insertText = (val: string) => {
   const selection = editor.selection;
 
   const range = new vscode.Range(selection.start, selection.end);
-  console.log('range: ', range);
 
   editor.edit((editBuilder) => {
     editBuilder.replace(range, val);
@@ -27,52 +26,6 @@ const getFilePathSuffix = (editor: any) => {
   const [_, suffix] = fileName.split('.');
   return suffix;
 };
-
-// discard
-// const getAllLogStatements = (fileSuffix: string, document: any, documentText: any) => {
-//   let logStatements = [];
-
-//   let logRegex: any;
-//   switch (fileSuffix) {
-//     case 'js':
-//     case 'jsx':
-//     case 'ts':
-//       logRegex = /console.(log)\((.*)\);?/g;
-//       break;
-//     case 'py': // python
-//     case 'rb': // ruby
-//       logRegex = /print\((.*)\);?/g;
-//       break;
-//     case 'java': // java
-//       logRegex = /System.out.print\((.*)\);?/g;
-//       break;
-//     default:
-//       logRegex = /console.(log)\((.*)\);?/g;
-//       break;
-//   }
-
-//   let match;
-//   while (match = logRegex.exec(documentText)) {
-//     let matchRange =
-//       new vscode.Range(
-//         document.positionAt(match.index),
-//         document.positionAt(match.index + match[0].length)
-//       );
-
-//     let emptyLineRange =
-//       new vscode.Range(
-//         document.positionAt(match.index + match[0].length),
-//         document.positionAt(match.index + match[0].length + 1)
-//       );
-
-//     if (!matchRange.isEmpty)
-//       logStatements.push(matchRange);
-//     logStatements.push(emptyLineRange);
-//   }
-
-//   return logStatements;
-// }
-
 
 const logExist = (editor: any, fileSuffix: string, document: any, documentText: any) => {
   let logStatements = [];
@@ -113,28 +66,85 @@ const logExist = (editor: any, fileSuffix: string, document: any, documentText: 
       );
 
     const selection = new vscode.Selection(
-      document.positionAt(match.index), document.positionAt(match.index + match[0].length),
-    )
+      document.positionAt(match.index),
+      document.positionAt(match.index + match[0].length),
+    );
 
     selections.push(selection);
 
-    if (!matchRange.isEmpty)
+    if (!matchRange.isEmpty) {
       logStatements.push(matchRange);
+    }
   }
 
   editor.selections = selections;
-  // console.log('editor.selections: ', editor.selections);
 
   return selections.length > 0;
-}
+};
 
-// const deleteFoundLogStatements = (editor: any, workspaceEdit: any, docUri: any, logs: any) => {
-//   vscode.workspace.applyEdit(workspaceEdit).then(() => {
-//     logs.length > 1
-//       ? vscode.window.showInformationMessage(`${logs.length} console.logs deleted`)
-//       : vscode.window.showInformationMessage(`${logs.length} console.log deleted`);
-//   });
-// }
+const getFarthestLetterPosition = (direction: string, cursorSelection: any, editor: any) => {
+  let currentCharacterPosition = cursorSelection.character;
+  while(true) {
+    // Assume all the words in VScode always at one line.
+    if (currentCharacterPosition > 0 || direction === 'right') {
+     const offsetTextRange = new vscode.Range(
+        new vscode.Position(
+          cursorSelection.line,
+          currentCharacterPosition - 1 
+        ),
+        new vscode.Position(
+          cursorSelection.line,
+          currentCharacterPosition
+        ),
+      );
+
+      const offsetText = editor.document.getText(offsetTextRange);
+
+      // Is not an assumed variable? Should it be configed?
+      if (!offsetText.match(/^[a-zA-Z0-9_]+$/)) {
+        return direction === 'left' ? currentCharacterPosition : currentCharacterPosition -1;
+      }
+
+      direction === 'left' ? currentCharacterPosition -= 1 : currentCharacterPosition += 1; 
+    } else {
+      return currentCharacterPosition;
+    }
+  }
+};
+
+const getAutoSelectedText = (editor: any) => {
+  const selection = editor.selection;
+  const start = selection.start;
+  const end = selection.end;
+  // Has no seletion text
+  if (start.line === end.line &&
+    start.character === end.character) {
+    const cursorSelection = editor.selection.active;
+
+    const leftFarthestLetterPosition = getFarthestLetterPosition('left', cursorSelection, editor);
+    const rightFarthestLetterPosition = getFarthestLetterPosition('right', cursorSelection, editor);
+    if (leftFarthestLetterPosition < rightFarthestLetterPosition) {
+      const autoSelectedTextRange = new vscode.Range(
+        new vscode.Position(
+          cursorSelection.line,
+          leftFarthestLetterPosition
+        ),
+        new vscode.Position(
+          cursorSelection.line,
+          rightFarthestLetterPosition
+        ),
+      );
+
+      const autoSelectedText = editor.document.getText(autoSelectedTextRange);
+      if ( autoSelectedText ){
+        return autoSelectedText;
+      }
+      return null;
+    }
+    return null;
+  }
+  return null;
+};
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -142,7 +152,6 @@ export function activate(context: vscode.ExtensionContext) {
 
   // Use the console to output diagnostic information (console.log) and errors (console.error)
   // This line of code will only be executed once when your extension is activated
-  console.log('Congratulations, your extension "fastPrinter" is now active!');
   // The command has been defined in the package.json file
   // Now provide the implementation of the command with registerCommand
   // The commandId parameter must match the command field in package.json
@@ -151,8 +160,12 @@ export function activate(context: vscode.ExtensionContext) {
     if (!editor) { return; }
 
     const selection = editor.selection;
-    const text = editor.document.getText(selection);
 
+    let text = editor.document.getText(selection);
+
+    if (!text) {
+      text = getAutoSelectedText(editor);
+    }
     // Get file type
     const suffix = getFilePathSuffix(editor);
     if (suffix) {
