@@ -13,7 +13,7 @@ It will insert a print statement like:
 - `console.log("${variable}: ", variable)`
 - `print("#{variable}: ", variable)`
 
-![](https://upload-images.jianshu.io/upload_images/2674994-245ef3be8e6d62aa.gif?imageMogr2/auto-orient/strip)
+![demo](https://raw.githubusercontent.com/joeeeeey/fast-printer/master/resources/demo.gif)
 
 ### Remove all print statements
 
